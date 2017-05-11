@@ -13,15 +13,7 @@ namespace WebApiToTypeScript.Cmd
             var assembly = GetAssembly(filename);
             var types = GetTypes(assembly);
 
-            GenerateCode(types);
-        }
-
-        private static void GenerateCode(IEnumerable<Type> types)
-        {
-            foreach (var type in types)
-            {
-                Console.WriteLine("Got type: {0}", type.Name);
-            }
+            new CodeGenerator().Generate(types);
         }
 
         private static IEnumerable<Type> GetTypes(Assembly assembly)
