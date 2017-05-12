@@ -1,28 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace WebApiToTypeScript.Cmd
 {
-    class CodeGenerator
+    internal class CodeGenerator
     {
-        public void Generate(IEnumerable<Type> controllerTypes)
+        public void Generate(TypeInfoExtractor.TypeInfo typeInfo)
         {
-            foreach (var controllerType in controllerTypes)
+            foreach (var controllerTypeInfo in typeInfo.ControllerTypeInfos)
             {
                 var codeFile = new StringBuilder();
 
-                codeFile.AppendStartOfModuleBlock()
-                    .AppendIndentation().AppendStartOfClassBlock(BuildServiceTypeName(controllerType.Name));
+                codeFile
+                    .AppendStartOfModuleBlock()
+                    .AppendIndentation()
+                    .AppendStartOfClassBlock(BuildServiceTypeName(controllerTypeInfo.TypeName));
 
-                foreach (var publicMethodInfo in GetPublicMethods(controllerType))
+                foreach (var endpointTypeInfo in controllerTypeInfo.EndpointTypeInfos)
                 {
-                    codeFile.AppendIndentation().AppendIndentation().AppendFunctionName(BuildFunctionName(publicMethodInfo.Name)).AppendReturnType(ConvertType(publicMethodInfo.ReturnType)).AppendFunctionBlockStart()
-                    .AppendIndentation().AppendIndentation().AppendIndentation().AppendAjaxRequestWithPromiseResolver()
-                    .AppendIndentation().AppendIndentation().AppendBlockEnd();
+                    codeFile
+                        .AppendIndentation()
+                        .AppendIndentation()
+                        .AppendFunctionName(BuildFunctionName(endpointTypeInfo.Name))
+                        .AppendReturnType(ConvertType(endpointTypeInfo.ReturnType))
+                        .AppendFunctionBlockStart()
+                        .AppendIndentation()
+                        .AppendIndentation()
+                        .AppendIndentation()
+                        .AppendAjaxRequestWithPromiseResolver()
+                        .AppendIndentation()
+                        .AppendIndentation()
+                        .AppendBlockEnd();
                 }
 
                 codeFile.AppendIndentation().AppendBlockEnd()
@@ -30,11 +39,6 @@ namespace WebApiToTypeScript.Cmd
 
                 File.WriteAllText("Api.ts", codeFile.ToString());
             }
-        }
-
-        private static IEnumerable<MethodInfo> GetPublicMethods(Type controllerType)
-        {
-            return controllerType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod).Where(x => x.Name == "Get");
         }
 
         private static string BuildServiceTypeName(string typeName)
@@ -51,9 +55,9 @@ namespace WebApiToTypeScript.Cmd
             return methodName.Substring(0,1).ToLower() + methodName.Substring(1, methodName.Length - 1);
         }
 
-        private static string ConvertType(Type type)
+        private static string ConvertType(string type)
         {
-            if (type == typeof(string)) return "string";
+            if (type == "String") return "string";
 
             return "any";
         }
@@ -70,7 +74,7 @@ namespace WebApiToTypeScript.Cmd
         internal static StringBuilder AppendFunctionName(this StringBuilder codeFile, string functionName) => codeFile.Append($"{functionName} = ()");
         internal static StringBuilder AppendReturnType(this StringBuilder codeFile, string typeName) => codeFile.Append($" : Promise<{typeName}>");
         internal static StringBuilder AppendFunctionBlockStart(this StringBuilder codeFile) => codeFile.AppendLine(" => {");
-        internal static StringBuilder AppendAjaxRequestWithPromiseResolver(this StringBuilder codeFile) => codeFile.AppendLine("return new Promise<string>((resolve, reject) => resolve('test'));");
+        internal static StringBuilder AppendAjaxRequestWithPromiseResolver(this StringBuilder codeFile) => codeFile.AppendLine("return new Promise<string>((resolve, reject) => resolve($.get('/api/testapi/get'));");
         internal static StringBuilder AppendFunctionBlockEnd(this StringBuilder codeFile) => codeFile.AppendLine("});");
     }
 }

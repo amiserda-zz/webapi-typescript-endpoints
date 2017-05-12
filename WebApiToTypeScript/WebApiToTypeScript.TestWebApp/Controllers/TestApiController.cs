@@ -2,7 +2,7 @@
 
 namespace WebApiToTypeScript.TestWebApp.Controllers
 {
-    public class TestController : ApiController
+    public class TestApiController : ApiController
     {
         public string Get()
         {
