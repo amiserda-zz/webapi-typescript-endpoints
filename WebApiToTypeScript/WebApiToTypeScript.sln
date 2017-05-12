@@ -5,8 +5,6 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiToTypeScript.TestWebApp", "WebApiToTypeScript.TestWebApp\WebApiToTypeScript.TestWebApp.csproj", "{3394F187-2CCB-4932-AC47-C389249FE9EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiToTypeScript", "WebApiToTypeScript\WebApiToTypeScript.csproj", "{8748A4FB-7350-44C0-8C59-3EA245E7C41C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiToTypeScript.Cmd", "WebApiToTypeScript.Cmd\WebApiToTypeScript.Cmd.csproj", "{DE598024-709A-45F1-A203-16BFDDA12E95}"
 EndProject
 Global
@@ -19,10 +17,6 @@ Global
 		{3394F187-2CCB-4932-AC47-C389249FE9EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3394F187-2CCB-4932-AC47-C389249FE9EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3394F187-2CCB-4932-AC47-C389249FE9EF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8748A4FB-7350-44C0-8C59-3EA245E7C41C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8748A4FB-7350-44C0-8C59-3EA245E7C41C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8748A4FB-7350-44C0-8C59-3EA245E7C41C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8748A4FB-7350-44C0-8C59-3EA245E7C41C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DE598024-709A-45F1-A203-16BFDDA12E95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DE598024-709A-45F1-A203-16BFDDA12E95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE598024-709A-45F1-A203-16BFDDA12E95}.Release|Any CPU.ActiveCfg = Release|Any CPU
