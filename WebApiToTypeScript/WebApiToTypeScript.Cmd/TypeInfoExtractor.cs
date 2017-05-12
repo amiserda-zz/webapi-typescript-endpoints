@@ -55,10 +55,20 @@ namespace WebApiToTypeScript.Cmd
                 endpointTypeInfos.Add(new TypeInfo.ControllerTypeInfo.EndpointTypeInfo
                 {
                     Name = methodInfo.Name,
-                    ReturnType = methodInfo.ReturnType.Name
+                    ReturnType = methodInfo.ReturnType.Name,
+                    Parameters = MapToParameterInfos(methodInfo.GetParameters())
                 });
             }
             return endpointTypeInfos;
+        }
+
+        private static IEnumerable<TypeInfo.ControllerTypeInfo.EndpointTypeInfo.ParameterInfo> MapToParameterInfos(ParameterInfo[] methodParameters)
+        {
+            return methodParameters.Select(x => new TypeInfo.ControllerTypeInfo.EndpointTypeInfo.ParameterInfo
+            {
+                Name = x.Name,
+                Type = x.ParameterType.Name
+            });
         }
 
         internal class TypeInfo
@@ -74,6 +84,13 @@ namespace WebApiToTypeScript.Cmd
                 {
                     public string Name { get; set; }
                     public string ReturnType { get; set; }
+                    public IEnumerable<ParameterInfo> Parameters { get; set; }
+
+                    internal class ParameterInfo
+                    {
+                        public string Name { get; set; }
+                        public string Type { get; set; }
+                    }
                 }
             }
         }

@@ -12,18 +12,35 @@ namespace WebApiToTypeScript.Cmd
             {
                 var codeFile = new StringBuilder();
 
+                var className = BuildServiceTypeName(controllerTypeInfo.TypeName);
+
                 codeFile
                     .AppendStartOfModuleBlock()
                     .AppendIndentation()
-                    .AppendStartOfClassBlock(BuildServiceTypeName(controllerTypeInfo.TypeName));
+                    .AppendStartOfClassBlock(className);
 
                 foreach (var endpointTypeInfo in controllerTypeInfo.EndpointTypeInfos)
                 {
+                    var functionName = ToCamelCase(endpointTypeInfo.Name);
+                    var returnType = MapDotNetToTypeScriptType(endpointTypeInfo.ReturnType);
+
+                    var parametersCode = new StringBuilder();
+                    foreach (var parameterInfo in endpointTypeInfo.Parameters)
+                    {
+                        var parameterName = ToCamelCase(parameterInfo.Name);
+                        var parameterType = MapDotNetToTypeScriptType(parameterInfo.Type);
+
+                        parametersCode.AppendFunctionParameter(parameterName, parameterType);
+                    }
+
                     codeFile
                         .AppendIndentation()
                         .AppendIndentation()
-                        .AppendFunctionName(BuildFunctionName(endpointTypeInfo.Name))
-                        .AppendReturnType(ConvertType(endpointTypeInfo.ReturnType))
+                        .AppendFunctionName(functionName)
+                        .Append($" (")
+                        .Append(RemoveTrailingParametersDelimiter(parametersCode))
+                        .Append(")")
+                        .AppendReturnType(returnType)
                         .AppendFunctionBlockStart()
                         .AppendIndentation()
                         .AppendIndentation()
@@ -41,6 +58,16 @@ namespace WebApiToTypeScript.Cmd
             }
         }
 
+        private static string RemoveTrailingParametersDelimiter(StringBuilder parametersCode)
+        {
+            var s = parametersCode.ToString();
+            var lastIndexOfParametersDelimiter = s.LastIndexOf(", ");
+
+            return lastIndexOfParametersDelimiter == -1
+                ? s
+                : s.Remove(lastIndexOfParametersDelimiter);
+        }
+
         private static string BuildServiceTypeName(string typeName)
         {
             var typeNameWithoutControllerPostfix = typeName.EndsWith("Controller")
@@ -50,14 +77,12 @@ namespace WebApiToTypeScript.Cmd
             return $"{typeNameWithoutControllerPostfix}Service";
         }
 
-        private static string BuildFunctionName(string methodName)
-        {
-            return methodName.Substring(0,1).ToLower() + methodName.Substring(1, methodName.Length - 1);
-        }
+        private static string ToCamelCase(string s) => char.ToLowerInvariant(s[0]) + s.Substring(1);
 
-        private static string ConvertType(string type)
+        private static string MapDotNetToTypeScriptType(string type)
         {
             if (type == "String") return "string";
+            if (type == "Int32") return "number";
 
             return "any";
         }
@@ -69,12 +94,14 @@ namespace WebApiToTypeScript.Cmd
         internal static StringBuilder AppendLineEnd(this StringBuilder codeFile) => codeFile.Append(Environment.NewLine);
         internal static StringBuilder AppendBlockEnd(this StringBuilder codeFile) => codeFile.AppendLine("}");
 
+        internal static StringBuilder AppendFunctionBlockStart(this StringBuilder codeFile) => codeFile.AppendLine(" => {");
+        internal static StringBuilder AppendFunctionName(this StringBuilder codeFile, string functionName) => codeFile.Append($"{functionName} =");
+        internal static StringBuilder AppendReturnType(this StringBuilder codeFile, string typeName) => codeFile.Append($" : Promise<{typeName}>");
+        internal static StringBuilder AppendFunctionBlockEnd(this StringBuilder codeFile) => codeFile.AppendLine("});");
+        internal static StringBuilder AppendFunctionParameter(this StringBuilder codeFile, string name, string type) => codeFile.Append($"{name}: {type}, ");
+
         internal static StringBuilder AppendStartOfModuleBlock(this StringBuilder codeFile) => codeFile.AppendLine("module Api {");
         internal static StringBuilder AppendStartOfClassBlock(this StringBuilder codeFile, string className) => codeFile.AppendLine($"export class {className} {{{Environment.NewLine}");
-        internal static StringBuilder AppendFunctionName(this StringBuilder codeFile, string functionName) => codeFile.Append($"{functionName} = ()");
-        internal static StringBuilder AppendReturnType(this StringBuilder codeFile, string typeName) => codeFile.Append($" : Promise<{typeName}>");
-        internal static StringBuilder AppendFunctionBlockStart(this StringBuilder codeFile) => codeFile.AppendLine(" => {");
         internal static StringBuilder AppendAjaxRequestWithPromiseResolver(this StringBuilder codeFile) => codeFile.AppendLine("return new Promise<string>((resolve, reject) => resolve($.get('/api/testapi/get'));");
-        internal static StringBuilder AppendFunctionBlockEnd(this StringBuilder codeFile) => codeFile.AppendLine("});");
     }
 }

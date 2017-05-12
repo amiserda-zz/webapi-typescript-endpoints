@@ -8,5 +8,10 @@ namespace WebApiToTypeScript.TestWebApp.Controllers
         {
             return "value";
         }
+
+        public int Get(int i, string s)
+        {
+            return -2;
+        }
     }
 }
