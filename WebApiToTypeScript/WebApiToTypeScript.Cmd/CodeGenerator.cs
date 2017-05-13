@@ -83,8 +83,21 @@ namespace WebApiToTypeScript.Cmd
 
         private static string MapDotNetToTypeScriptType(string type)
         {
-            if (type == "String") return "string";
+            if (type == "Boolean") return "boolean";
+            if (type == "Byte") return "number";
+            if (type == "Char") return "string";
+            if (type == "Decimal") return "number";
+            if (type == "Double") return "number";
+            if (type == "Float") return "number";
+            if (type == "Int16") return "number";
             if (type == "Int32") return "number";
+            if (type == "Int64") return "number";
+            if (type == "SByte") return "number";
+            if (type == "UInt16") return "number";
+            if (type == "UInt32") return "number";
+            if (type == "UInt64") return "number";
+            if (type == "String") return "string";
+            if (type == "DateTime") return "Date";
 
             return "any";
         }
