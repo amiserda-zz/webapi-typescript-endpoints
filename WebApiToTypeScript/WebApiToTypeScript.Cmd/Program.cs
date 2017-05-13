@@ -1,4 +1,6 @@
-﻿namespace WebApiToTypeScript.Cmd
+﻿using System.IO;
+
+namespace WebApiToTypeScript.Cmd
 {
     class Program
     {
@@ -8,7 +10,9 @@
 
             var typeInfo = new TypeInfoExtractor().Extract(assemblyFilename);
 
-            new CodeGenerator().Generate(typeInfo);
+            var typeScriptCode = new CodeGenerator().Generate(typeInfo);
+
+            File.WriteAllText(@"..\..\..\WebApiToTypeScript.TestWebApp\Scripts\GeneratedTypeScript\Api.ts", typeScriptCode);
         }
     }
 }

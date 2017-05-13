@@ -1,17 +1,18 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace WebApiToTypeScript.Cmd
 {
     internal class CodeGenerator
     {
-        public void Generate(TypeInfoExtractor.TypeInfo typeInfo)
+        public string Generate(TypeInfoExtractor.TypeInfo typeInfo)
         {
+            var codeFile = new StringBuilder();
+
             foreach (var controllerTypeInfo in typeInfo.ControllerTypeInfos)
             {
-                var codeFile = new StringBuilder();
-
                 var className = BuildServiceTypeName(controllerTypeInfo.TypeName);
 
                 codeFile
@@ -45,17 +46,18 @@ namespace WebApiToTypeScript.Cmd
                         .AppendIndentation()
                         .AppendIndentation()
                         .AppendIndentation()
-                        .AppendAjaxRequestWithPromiseResolver()
+                        .AppendAjaxRequestWithPromiseResolver(endpointTypeInfo.Name, MapDotNetToTypeScriptType(endpointTypeInfo.ReturnType), endpointTypeInfo.Parameters)
                         .AppendIndentation()
                         .AppendIndentation()
                         .AppendBlockEnd();
                 }
 
-                codeFile.AppendIndentation().AppendBlockEnd()
+                codeFile
+                    .AppendIndentation()
+                    .AppendBlockEnd()
                     .AppendBlockEnd();
-
-                File.WriteAllText("Api.ts", codeFile.ToString());
             }
+            return codeFile.ToString();
         }
 
         private static string RemoveTrailingParametersDelimiter(StringBuilder parametersCode)
@@ -102,6 +104,15 @@ namespace WebApiToTypeScript.Cmd
 
         internal static StringBuilder AppendStartOfModuleBlock(this StringBuilder codeFile) => codeFile.AppendLine("module Api {");
         internal static StringBuilder AppendStartOfClassBlock(this StringBuilder codeFile, string className) => codeFile.AppendLine($"export class {className} {{{Environment.NewLine}");
-        internal static StringBuilder AppendAjaxRequestWithPromiseResolver(this StringBuilder codeFile) => codeFile.AppendLine("return new Promise<string>((resolve, reject) => resolve($.get('/api/testapi/get'));");
+
+        internal static StringBuilder AppendAjaxRequestWithPromiseResolver(this StringBuilder codeFile, 
+            string endpointName,
+            string returnType,
+            IEnumerable<TypeInfoExtractor.TypeInfo.ControllerTypeInfo.EndpointTypeInfo.ParameterInfo> parameters)
+        {
+            var ajaxRequestParams = string.Join(", ", parameters.Select(p => p.Name));
+
+            return codeFile.AppendLine($"return new Promise<{returnType}>((resolve) => resolve($.get('/api/testapi/{endpointName}', {{{ajaxRequestParams}}})));");
+        }
     }
 }

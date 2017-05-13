@@ -6,6 +6,18 @@
 </head>
 <body>
     <script src="Scripts/jquery-1.10.2.js"></script>
-    <script src="Scripts/test.js"></script>
+    <script src="Scripts/GeneratedTypeScript/Api.js"></script>
+<script>
+    new Api.TestApiService()
+        .get1()
+        .then(function(data) {
+            console.log(data);
+        });
+    new Api.TestApiService()
+        .get12(1, 's')
+        .then(function(data) {
+            console.log(data);
+        });
+</script>
 </body>
 </html>

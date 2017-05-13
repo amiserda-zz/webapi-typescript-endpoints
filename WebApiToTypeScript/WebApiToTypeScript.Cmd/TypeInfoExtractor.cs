@@ -43,7 +43,7 @@ namespace WebApiToTypeScript.Cmd
         {
             return type
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod)
-                .Where(x => x.Name == "Get");
+                .Where(x => x.Name.StartsWith("Get1"));
         }
 
         private static IEnumerable<TypeInfo.ControllerTypeInfo.EndpointTypeInfo> MapToEndpointTypeInfos(IEnumerable<MethodInfo> methodInfos)
