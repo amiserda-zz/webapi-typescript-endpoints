@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace WebApiToTypeScript.Cmd
+namespace WebApiToTypeScript.Cmd.Reflector
 {
-    internal class DotNetEndpointsTypeInfoExtractor
+    internal class EndpointsInfoReflector
     {
-        internal static DotNetEndpointsTypeInfo Extract(string assemblyFilename)
+        internal static DotNetEndpointsTypeInfo Reflect(string assemblyFilename)
         {
             var typeInfo = new DotNetEndpointsTypeInfo();
 

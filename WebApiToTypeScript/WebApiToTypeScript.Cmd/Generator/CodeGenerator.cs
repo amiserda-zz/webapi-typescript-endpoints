@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using WebApiToTypeScript.Cmd.Mapper;
 
-namespace WebApiToTypeScript.Cmd
+namespace WebApiToTypeScript.Cmd.Generator
 {
-    internal class TypeScriptCodeGenerator
+    internal class CodeGenerator
     {
-        public static string Generate(DotNetEndpointsToTypeScriptArtefactsMapper.TypeScriptArtefacts typeScriptArtefacts)
+        public static string Generate(EndpointsToTypeScriptMapper.TypeScriptArtefacts typeScriptArtefacts)
         {
             var codeFile = new StringBuilder().AppendStartOfModuleBlock(typeScriptArtefacts.Module);
 
@@ -82,7 +83,7 @@ namespace WebApiToTypeScript.Cmd
         internal static StringBuilder AppendAjaxRequestWithPromiseResolver(this StringBuilder codeFile, 
             string endpointName,
             string returnType,
-            IEnumerable<DotNetEndpointsToTypeScriptArtefactsMapper.TypeScriptArtefacts.ServiceClassInfo.FunctionInfo.ParameterInfo> parameters)
+            IEnumerable<EndpointsToTypeScriptMapper.TypeScriptArtefacts.ServiceClassInfo.FunctionInfo.ParameterInfo> parameters)
         {
             var ajaxRequestParams = string.Join(", ", parameters.Select(p => p.Name));
 

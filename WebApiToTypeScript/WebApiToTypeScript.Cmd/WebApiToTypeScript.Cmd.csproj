@@ -43,11 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TypeScriptCodeGenerator.cs" />
-    <Compile Include="DotNetEndpointsToTypeScriptArtefactsMapper.cs" />
+    <Compile Include="Generator\CodeGenerator.cs" />
+    <Compile Include="Mapper\EndpointsToTypeScriptMapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DotNetEndpointsTypeInfoExtractor.cs" />
+    <Compile Include="Reflector\EndpointsInfoReflector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -58,6 +58,7 @@
       <Name>WebApiToTypeScript</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

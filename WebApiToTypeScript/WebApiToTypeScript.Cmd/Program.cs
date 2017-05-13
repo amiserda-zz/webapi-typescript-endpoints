@@ -1,4 +1,7 @@
 ﻿using System.IO;
+using WebApiToTypeScript.Cmd.Generator;
+using WebApiToTypeScript.Cmd.Mapper;
+using WebApiToTypeScript.Cmd.Reflector;
 
 namespace WebApiToTypeScript.Cmd
 {
@@ -8,9 +11,9 @@ namespace WebApiToTypeScript.Cmd
         {
             var assemblyFilename = @"..\..\..\WebApiToTypeScript.TestWebApp\bin\WebApiToTypeScript.TestWebApp.dll";
 
-            var dotNetEndpointsTypeInfo = DotNetEndpointsTypeInfoExtractor.Extract(assemblyFilename);
-            var typeScriptArtefacts = DotNetEndpointsToTypeScriptArtefactsMapper.Map(dotNetEndpointsTypeInfo);
-            var typeScriptCode = TypeScriptCodeGenerator.Generate(typeScriptArtefacts);
+            var dotNetEndpointsTypeInfo = EndpointsInfoReflector.Reflect(assemblyFilename);
+            var typeScriptArtefacts = EndpointsToTypeScriptMapper.Map(dotNetEndpointsTypeInfo);
+            var typeScriptCode = CodeGenerator.Generate(typeScriptArtefacts);
 
             File.WriteAllText(@"..\..\..\WebApiToTypeScript.TestWebApp\Scripts\GeneratedTypeScript\Api.ts", typeScriptCode);
         }

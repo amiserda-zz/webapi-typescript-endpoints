@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using WebApiToTypeScript.Cmd.Reflector;
 
-namespace WebApiToTypeScript.Cmd
+namespace WebApiToTypeScript.Cmd.Mapper
 {
-    internal class DotNetEndpointsToTypeScriptArtefactsMapper
+    internal class EndpointsToTypeScriptMapper
     {
-        public static TypeScriptArtefacts Map(DotNetEndpointsTypeInfoExtractor.DotNetEndpointsTypeInfo dotNetEndpointsTypeInfo)
+        public static TypeScriptArtefacts Map(EndpointsInfoReflector.DotNetEndpointsTypeInfo dotNetEndpointsTypeInfo)
         {
             var typeScriptArtefacts = new TypeScriptArtefacts
             {
@@ -15,7 +16,7 @@ namespace WebApiToTypeScript.Cmd
             return typeScriptArtefacts;
         }
 
-        private static IEnumerable<TypeScriptArtefacts.ServiceClassInfo> BuildServiceClassesInfo(IEnumerable<DotNetEndpointsTypeInfoExtractor.DotNetEndpointsTypeInfo.ControllerTypeInfo> controllerTypeInfos)
+        private static IEnumerable<TypeScriptArtefacts.ServiceClassInfo> BuildServiceClassesInfo(IEnumerable<EndpointsInfoReflector.DotNetEndpointsTypeInfo.ControllerTypeInfo> controllerTypeInfos)
         {
             return 
                 controllerTypeInfos.Select(controllerTypeInfo => new TypeScriptArtefacts.ServiceClassInfo
@@ -25,7 +26,7 @@ namespace WebApiToTypeScript.Cmd
                 });
         }
 
-        private static IEnumerable<TypeScriptArtefacts.ServiceClassInfo.FunctionInfo> BuildFunctionsInfo(IEnumerable<DotNetEndpointsTypeInfoExtractor.DotNetEndpointsTypeInfo.ControllerTypeInfo.EndpointTypeInfo> endpointTypeInfos)
+        private static IEnumerable<TypeScriptArtefacts.ServiceClassInfo.FunctionInfo> BuildFunctionsInfo(IEnumerable<EndpointsInfoReflector.DotNetEndpointsTypeInfo.ControllerTypeInfo.EndpointTypeInfo> endpointTypeInfos)
         {
             return
                 endpointTypeInfos.Select(endpointTypeInfo => new TypeScriptArtefacts.ServiceClassInfo.FunctionInfo
@@ -36,7 +37,7 @@ namespace WebApiToTypeScript.Cmd
                 });
         }
 
-        private static IEnumerable<TypeScriptArtefacts.ServiceClassInfo.FunctionInfo.ParameterInfo> BuildParametersInfo(IEnumerable<DotNetEndpointsTypeInfoExtractor.DotNetEndpointsTypeInfo.ControllerTypeInfo.EndpointTypeInfo.ParameterInfo> parameters)
+        private static IEnumerable<TypeScriptArtefacts.ServiceClassInfo.FunctionInfo.ParameterInfo> BuildParametersInfo(IEnumerable<EndpointsInfoReflector.DotNetEndpointsTypeInfo.ControllerTypeInfo.EndpointTypeInfo.ParameterInfo> parameters)
         {
             return
                 parameters.Select(parameter => new TypeScriptArtefacts.ServiceClassInfo.FunctionInfo.ParameterInfo
