@@ -8,7 +8,7 @@ namespace WebApiToTypeScript.Cmd
         {
             var assemblyFilename = @"..\..\..\WebApiToTypeScript.TestWebApp\bin\WebApiToTypeScript.TestWebApp.dll";
 
-            var typeInfo = new TypeInfoExtractor().Extract(assemblyFilename);
+            var typeInfo = new DotNetEndpointsTypeInfoExtractor().Extract(assemblyFilename);
 
             var typeScriptCode = new CodeGenerator().Generate(typeInfo);
 

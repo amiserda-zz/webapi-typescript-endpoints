@@ -7,11 +7,11 @@ namespace WebApiToTypeScript.Cmd
 {
     internal class CodeGenerator
     {
-        public string Generate(TypeInfoExtractor.TypeInfo typeInfo)
+        public string Generate(DotNetEndpointsTypeInfoExtractor.DotNetEndpointsTypeInfo dotNetEndpointsTypeInfo)
         {
             var codeFile = new StringBuilder();
 
-            foreach (var controllerTypeInfo in typeInfo.ControllerTypeInfos)
+            foreach (var controllerTypeInfo in dotNetEndpointsTypeInfo.ControllerTypeInfos)
             {
                 var className = BuildServiceTypeName(controllerTypeInfo.TypeName);
 
@@ -121,7 +121,7 @@ namespace WebApiToTypeScript.Cmd
         internal static StringBuilder AppendAjaxRequestWithPromiseResolver(this StringBuilder codeFile, 
             string endpointName,
             string returnType,
-            IEnumerable<TypeInfoExtractor.TypeInfo.ControllerTypeInfo.EndpointTypeInfo.ParameterInfo> parameters)
+            IEnumerable<DotNetEndpointsTypeInfoExtractor.DotNetEndpointsTypeInfo.ControllerTypeInfo.EndpointTypeInfo.ParameterInfo> parameters)
         {
             var ajaxRequestParams = string.Join(", ", parameters.Select(p => p.Name));
 

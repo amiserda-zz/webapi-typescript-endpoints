@@ -5,11 +5,11 @@ using System.Reflection;
 
 namespace WebApiToTypeScript.Cmd
 {
-    internal class TypeInfoExtractor
+    internal class DotNetEndpointsTypeInfoExtractor
     {
-        internal TypeInfo Extract(string assemblyFilename)
+        internal DotNetEndpointsTypeInfo Extract(string assemblyFilename)
         {
-            var typeInfo = new TypeInfo();
+            var typeInfo = new DotNetEndpointsTypeInfo();
 
             var assembly = GetAssembly(assemblyFilename);
             var controllerTypes = GetControllerTypes(assembly);
@@ -22,15 +22,15 @@ namespace WebApiToTypeScript.Cmd
         private static Assembly GetAssembly(string filename) => Assembly.LoadFrom(filename);
         private static IEnumerable<Type> GetControllerTypes(Assembly assembly) => assembly.GetTypes().Where(t => t.Name.EndsWith("ApiController"));
 
-        private static IEnumerable<TypeInfo.ControllerTypeInfo> MapToControllerTypeInfos(IEnumerable<Type> controllerTypes)
+        private static IEnumerable<DotNetEndpointsTypeInfo.ControllerTypeInfo> MapToControllerTypeInfos(IEnumerable<Type> controllerTypes)
         {
-            var controllerTypeInfos = new List<TypeInfo.ControllerTypeInfo>();
+            var controllerTypeInfos = new List<DotNetEndpointsTypeInfo.ControllerTypeInfo>();
 
             foreach (var controllerType in controllerTypes)
             {
                 var publicMethodInfos = GetPublicMethods(controllerType);
 
-                controllerTypeInfos.Add(new TypeInfo.ControllerTypeInfo
+                controllerTypeInfos.Add(new DotNetEndpointsTypeInfo.ControllerTypeInfo
                 {
                     TypeName = controllerType.Name,
                     EndpointTypeInfos = MapToEndpointTypeInfos(publicMethodInfos)
@@ -46,13 +46,13 @@ namespace WebApiToTypeScript.Cmd
                 .Where(x => x.Name.StartsWith("Get"));
         }
 
-        private static IEnumerable<TypeInfo.ControllerTypeInfo.EndpointTypeInfo> MapToEndpointTypeInfos(IEnumerable<MethodInfo> methodInfos)
+        private static IEnumerable<DotNetEndpointsTypeInfo.ControllerTypeInfo.EndpointTypeInfo> MapToEndpointTypeInfos(IEnumerable<MethodInfo> methodInfos)
         {
-            var endpointTypeInfos = new List<TypeInfo.ControllerTypeInfo.EndpointTypeInfo>();
+            var endpointTypeInfos = new List<DotNetEndpointsTypeInfo.ControllerTypeInfo.EndpointTypeInfo>();
 
             foreach (var methodInfo in methodInfos)
             {
-                endpointTypeInfos.Add(new TypeInfo.ControllerTypeInfo.EndpointTypeInfo
+                endpointTypeInfos.Add(new DotNetEndpointsTypeInfo.ControllerTypeInfo.EndpointTypeInfo
                 {
                     Name = methodInfo.Name,
                     ReturnType = methodInfo.ReturnType.Name,
@@ -62,16 +62,16 @@ namespace WebApiToTypeScript.Cmd
             return endpointTypeInfos;
         }
 
-        private static IEnumerable<TypeInfo.ControllerTypeInfo.EndpointTypeInfo.ParameterInfo> MapToParameterInfos(ParameterInfo[] methodParameters)
+        private static IEnumerable<DotNetEndpointsTypeInfo.ControllerTypeInfo.EndpointTypeInfo.ParameterInfo> MapToParameterInfos(ParameterInfo[] methodParameters)
         {
-            return methodParameters.Select(x => new TypeInfo.ControllerTypeInfo.EndpointTypeInfo.ParameterInfo
+            return methodParameters.Select(x => new DotNetEndpointsTypeInfo.ControllerTypeInfo.EndpointTypeInfo.ParameterInfo
             {
                 Name = x.Name,
                 Type = x.ParameterType.Name
             });
         }
 
-        internal class TypeInfo
+        internal class DotNetEndpointsTypeInfo
         {
             public IEnumerable<ControllerTypeInfo> ControllerTypeInfos { get; set; }
 
