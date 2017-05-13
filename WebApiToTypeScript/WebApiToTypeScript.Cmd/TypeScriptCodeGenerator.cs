@@ -5,48 +5,39 @@ using System.Text;
 
 namespace WebApiToTypeScript.Cmd
 {
-    internal class CodeGenerator
+    internal class TypeScriptCodeGenerator
     {
-        public string Generate(DotNetEndpointsTypeInfoExtractor.DotNetEndpointsTypeInfo dotNetEndpointsTypeInfo)
+        public static string Generate(DotNetEndpointsToTypeScriptArtefactsMapper.TypeScriptArtefacts typeScriptArtefacts)
         {
-            var codeFile = new StringBuilder();
+            var codeFile = new StringBuilder().AppendStartOfModuleBlock(typeScriptArtefacts.Module);
 
-            foreach (var controllerTypeInfo in dotNetEndpointsTypeInfo.ControllerTypeInfos)
+            foreach (var service in typeScriptArtefacts.Services)
             {
-                var className = BuildServiceTypeName(controllerTypeInfo.TypeName);
-
                 codeFile
-                    .AppendStartOfModuleBlock()
                     .AppendIndentation()
-                    .AppendStartOfClassBlock(className);
+                    .AppendStartOfClassBlock(service.Name);
 
-                foreach (var endpointTypeInfo in controllerTypeInfo.EndpointTypeInfos)
+                foreach (var function in service.Functions)
                 {
-                    var functionName = ToCamelCase(endpointTypeInfo.Name);
-                    var returnType = MapDotNetToTypeScriptType(endpointTypeInfo.ReturnType);
-
                     var parametersCode = new StringBuilder();
-                    foreach (var parameterInfo in endpointTypeInfo.Parameters)
+                    foreach (var parameter in function.Parameters)
                     {
-                        var parameterName = ToCamelCase(parameterInfo.Name);
-                        var parameterType = MapDotNetToTypeScriptType(parameterInfo.Type);
-
-                        parametersCode.AppendFunctionParameter(parameterName, parameterType);
+                        parametersCode.AppendFunctionParameter(parameter.Name, parameter.Type);
                     }
 
                     codeFile
                         .AppendIndentation()
                         .AppendIndentation()
-                        .AppendFunctionName(functionName)
+                        .AppendFunctionName(function.Name)
                         .Append($" (")
                         .Append(RemoveTrailingParametersDelimiter(parametersCode))
                         .Append(")")
-                        .AppendReturnType(returnType)
+                        .AppendReturnType(function.ReturnType)
                         .AppendFunctionBlockStart()
                         .AppendIndentation()
                         .AppendIndentation()
                         .AppendIndentation()
-                        .AppendAjaxRequestWithPromiseResolver(endpointTypeInfo.Name, MapDotNetToTypeScriptType(endpointTypeInfo.ReturnType), endpointTypeInfo.Parameters)
+                        .AppendAjaxRequestWithPromiseResolver(function.Name, function.ReturnType, function.Parameters)
                         .AppendIndentation()
                         .AppendIndentation()
                         .AppendBlockEnd();
@@ -54,10 +45,12 @@ namespace WebApiToTypeScript.Cmd
 
                 codeFile
                     .AppendIndentation()
-                    .AppendBlockEnd()
                     .AppendBlockEnd();
             }
-            return codeFile.ToString();
+            return 
+                codeFile
+                .AppendBlockEnd()
+                .ToString();
         }
 
         private static string RemoveTrailingParametersDelimiter(StringBuilder parametersCode)
@@ -68,38 +61,6 @@ namespace WebApiToTypeScript.Cmd
             return lastIndexOfParametersDelimiter == -1
                 ? s
                 : s.Remove(lastIndexOfParametersDelimiter);
-        }
-
-        private static string BuildServiceTypeName(string typeName)
-        {
-            var typeNameWithoutControllerPostfix = typeName.EndsWith("Controller")
-                ? typeName.Remove(typeName.Length - "Controller".Length)
-                : typeName;
-
-            return $"{typeNameWithoutControllerPostfix}Service";
-        }
-
-        private static string ToCamelCase(string s) => char.ToLowerInvariant(s[0]) + s.Substring(1);
-
-        private static string MapDotNetToTypeScriptType(string type)
-        {
-            if (type == "Boolean") return "boolean";
-            if (type == "Byte") return "number";
-            if (type == "Char") return "string";
-            if (type == "Decimal") return "number";
-            if (type == "Double") return "number";
-            if (type == "Float") return "number";
-            if (type == "Int16") return "number";
-            if (type == "Int32") return "number";
-            if (type == "Int64") return "number";
-            if (type == "SByte") return "number";
-            if (type == "UInt16") return "number";
-            if (type == "UInt32") return "number";
-            if (type == "UInt64") return "number";
-            if (type == "String") return "string";
-            if (type == "DateTime") return "Date";
-
-            return "any";
         }
     }
 
@@ -115,13 +76,13 @@ namespace WebApiToTypeScript.Cmd
         internal static StringBuilder AppendFunctionBlockEnd(this StringBuilder codeFile) => codeFile.AppendLine("});");
         internal static StringBuilder AppendFunctionParameter(this StringBuilder codeFile, string name, string type) => codeFile.Append($"{name}: {type}, ");
 
-        internal static StringBuilder AppendStartOfModuleBlock(this StringBuilder codeFile) => codeFile.AppendLine("module Api {");
+        internal static StringBuilder AppendStartOfModuleBlock(this StringBuilder codeFile, string module) => codeFile.AppendLine($"module {module} {{");
         internal static StringBuilder AppendStartOfClassBlock(this StringBuilder codeFile, string className) => codeFile.AppendLine($"export class {className} {{{Environment.NewLine}");
 
         internal static StringBuilder AppendAjaxRequestWithPromiseResolver(this StringBuilder codeFile, 
             string endpointName,
             string returnType,
-            IEnumerable<DotNetEndpointsTypeInfoExtractor.DotNetEndpointsTypeInfo.ControllerTypeInfo.EndpointTypeInfo.ParameterInfo> parameters)
+            IEnumerable<DotNetEndpointsToTypeScriptArtefactsMapper.TypeScriptArtefacts.ServiceClassInfo.FunctionInfo.ParameterInfo> parameters)
         {
             var ajaxRequestParams = string.Join(", ", parameters.Select(p => p.Name));
 

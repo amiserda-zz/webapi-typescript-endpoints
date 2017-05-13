@@ -7,7 +7,7 @@ namespace WebApiToTypeScript.Cmd
 {
     internal class DotNetEndpointsTypeInfoExtractor
     {
-        internal DotNetEndpointsTypeInfo Extract(string assemblyFilename)
+        internal static DotNetEndpointsTypeInfo Extract(string assemblyFilename)
         {
             var typeInfo = new DotNetEndpointsTypeInfo();
 
