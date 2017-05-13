@@ -9,7 +9,7 @@ namespace WebApiToTypeScript.TestWebApp.Controllers
             return "value";
         }
 
-        public int Get12(int i, string s)
+        public int Get2(int i, string s)
         {
             return -2;
         }

@@ -42,8 +42,8 @@ namespace WebApiToTypeScript.Cmd
         private static IEnumerable<MethodInfo> GetPublicMethods(Type type)
         {
             return type
-                .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod)
-                .Where(x => x.Name.StartsWith("Get1"));
+                .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.DeclaredOnly)
+                .Where(x => x.Name.StartsWith("Get"));
         }
 
         private static IEnumerable<TypeInfo.ControllerTypeInfo.EndpointTypeInfo> MapToEndpointTypeInfos(IEnumerable<MethodInfo> methodInfos)
