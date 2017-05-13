@@ -11,8 +11,8 @@ namespace WebApiToTypeScript.Cmd
         {
             var assemblyFilename = @"..\..\..\WebApiToTypeScript.TestWebApp\bin\WebApiToTypeScript.TestWebApp.dll";
 
-            var dotNetEndpointsTypeInfo = EndpointsInfoReflector.Reflect(assemblyFilename);
-            var typeScriptArtefacts = EndpointsToTypeScriptMapper.Map(dotNetEndpointsTypeInfo);
+            var endpointsTypeInfo = EndpointsInfoReflector.Reflect(assemblyFilename);
+            var typeScriptArtefacts = EndpointsToTypeScriptMapper.Map(endpointsTypeInfo);
             var typeScriptCode = CodeGenerator.Generate(typeScriptArtefacts);
 
             File.WriteAllText(@"..\..\..\WebApiToTypeScript.TestWebApp\Scripts\GeneratedTypeScript\Api.ts", typeScriptCode);

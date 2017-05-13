@@ -43,11 +43,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Generator\CodeFormattingExtensions.cs" />
     <Compile Include="Generator\CodeGenerator.cs" />
     <Compile Include="Mapper\EndpointsToTypeScriptMapper.cs" />
+    <Compile Include="Mapper\FunctionInfo.cs" />
+    <Compile Include="Mapper\ParameterInfo.cs" />
+    <Compile Include="Mapper\ServiceClassInfo.cs" />
+    <Compile Include="Mapper\TypeScriptArtefacts.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reflector\ControllerTypeInfo.cs" />
     <Compile Include="Reflector\EndpointsInfoReflector.cs" />
+    <Compile Include="Reflector\EndpointTypeInfo.cs" />
+    <Compile Include="Reflector\ParameterInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -6,30 +6,30 @@ namespace WebApiToTypeScript.Cmd.Mapper
 {
     internal class EndpointsToTypeScriptMapper
     {
-        public static TypeScriptArtefacts Map(EndpointsInfoReflector.DotNetEndpointsTypeInfo dotNetEndpointsTypeInfo)
+        public static TypeScriptArtefacts Map(IEnumerable<ControllerTypeInfo> controllerTypeInfos)
         {
             var typeScriptArtefacts = new TypeScriptArtefacts
             {
                 Module = "Api",
-                Services = BuildServiceClassesInfo(dotNetEndpointsTypeInfo.ControllerTypeInfos)
+                Services = BuildServiceClassesInfo(controllerTypeInfos)
             };
             return typeScriptArtefacts;
         }
 
-        private static IEnumerable<TypeScriptArtefacts.ServiceClassInfo> BuildServiceClassesInfo(IEnumerable<EndpointsInfoReflector.DotNetEndpointsTypeInfo.ControllerTypeInfo> controllerTypeInfos)
+        private static IEnumerable<ServiceClassInfo> BuildServiceClassesInfo(IEnumerable<ControllerTypeInfo> controllerTypeInfos)
         {
             return 
-                controllerTypeInfos.Select(controllerTypeInfo => new TypeScriptArtefacts.ServiceClassInfo
+                controllerTypeInfos.Select(controllerTypeInfo => new ServiceClassInfo
                 {
                     Name = BuildServiceTypeName(controllerTypeInfo.TypeName),
                     Functions = BuildFunctionsInfo(controllerTypeInfo.EndpointTypeInfos)
                 });
         }
 
-        private static IEnumerable<TypeScriptArtefacts.ServiceClassInfo.FunctionInfo> BuildFunctionsInfo(IEnumerable<EndpointsInfoReflector.DotNetEndpointsTypeInfo.ControllerTypeInfo.EndpointTypeInfo> endpointTypeInfos)
+        private static IEnumerable<FunctionInfo> BuildFunctionsInfo(IEnumerable<EndpointTypeInfo> endpointTypeInfos)
         {
             return
-                endpointTypeInfos.Select(endpointTypeInfo => new TypeScriptArtefacts.ServiceClassInfo.FunctionInfo
+                endpointTypeInfos.Select(endpointTypeInfo => new FunctionInfo
                 {
                     Name = ToCamelCase(endpointTypeInfo.Name),
                     ReturnType = MapDotNetToTypeScriptType(endpointTypeInfo.ReturnType),
@@ -37,10 +37,10 @@ namespace WebApiToTypeScript.Cmd.Mapper
                 });
         }
 
-        private static IEnumerable<TypeScriptArtefacts.ServiceClassInfo.FunctionInfo.ParameterInfo> BuildParametersInfo(IEnumerable<EndpointsInfoReflector.DotNetEndpointsTypeInfo.ControllerTypeInfo.EndpointTypeInfo.ParameterInfo> parameters)
+        private static IEnumerable<ParameterInfo> BuildParametersInfo(IEnumerable<Reflector.ParameterInfo> parameters)
         {
             return
-                parameters.Select(parameter => new TypeScriptArtefacts.ServiceClassInfo.FunctionInfo.ParameterInfo
+                parameters.Select(parameter => new ParameterInfo
                 {
                     Name = ToCamelCase(parameter.Name),
                     Type = MapDotNetToTypeScriptType(parameter.Type)
@@ -77,31 +77,6 @@ namespace WebApiToTypeScript.Cmd.Mapper
             if (type == "DateTime") return "Date";
 
             return "any";
-        }
-
-        internal class TypeScriptArtefacts
-        {
-            public string Module { get; set; }
-            public IEnumerable<ServiceClassInfo> Services { get; set; }
-
-            internal class ServiceClassInfo
-            {
-                public string Name { get; set; }
-                public IEnumerable<FunctionInfo> Functions { get; set; }
-
-                internal class FunctionInfo
-                {
-                    public string Name { get; set; }
-                    public string ReturnType { get; set; }
-                    public IEnumerable<ParameterInfo> Parameters { get; set; }
-
-                    internal class ParameterInfo
-                    {
-                        public string Name { get; set; }
-                        public string Type { get; set; }
-                    }
-                }
-            }
         }
     }
 }
