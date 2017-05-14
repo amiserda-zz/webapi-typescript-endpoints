@@ -45,11 +45,14 @@ namespace WebApiToTypeScript.Cmd.Reflector
                 {
                     Name = methodInfo.Name,
                     ReturnType = methodInfo.ReturnType.Name,
+                    Attributes = ExtractAttributeNames(methodInfo.CustomAttributes),
                     Parameters = MapToParameterInfos(methodInfo.GetParameters())
                 });
             }
             return endpointTypeInfos;
         }
+
+        private static IEnumerable<string> ExtractAttributeNames(IEnumerable<CustomAttributeData> attributes) => attributes.Select(a => a.AttributeType.Name);
 
         private static IEnumerable<ParameterInfo> MapToParameterInfos(System.Reflection.ParameterInfo[] methodParameters)
         {

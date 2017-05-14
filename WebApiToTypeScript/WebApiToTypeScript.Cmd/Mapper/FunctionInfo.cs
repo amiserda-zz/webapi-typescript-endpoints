@@ -6,6 +6,7 @@ namespace WebApiToTypeScript.Cmd.Mapper
     {
         public string Name { get; set; }
         public string ReturnType { get; set; }
+        public string HttpVerb { get; set; }
         public IEnumerable<ParameterInfo> Parameters { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using WebApiToTypeScript.Cmd.Reflector;
 
@@ -33,8 +34,17 @@ namespace WebApiToTypeScript.Cmd.Mapper
                 {
                     Name = ToCamelCase(endpointTypeInfo.Name),
                     ReturnType = MapDotNetToTypeScriptType(endpointTypeInfo.ReturnType),
+                    HttpVerb = DetectHttpVerb(endpointTypeInfo),
                     Parameters = BuildParametersInfo(endpointTypeInfo.Parameters)
                 });
+        }
+
+        private static string DetectHttpVerb(EndpointTypeInfo endpointTypeInfo)
+        {
+            if (endpointTypeInfo.Name.StartsWith("Get") || endpointTypeInfo.Attributes.Contains("HttpGet"))
+                return "GET";
+
+            return "GET";
         }
 
         private static IEnumerable<ParameterInfo> BuildParametersInfo(IEnumerable<Reflector.ParameterInfo> parameters)

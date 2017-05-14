@@ -24,11 +24,12 @@ namespace WebApiToTypeScript.Cmd.Generator
         internal static StringBuilder AppendAjaxRequestWithPromiseResolver(this StringBuilder codeFile, 
             string endpointName,
             string returnType,
+            string jQueryAjaxRequestFunction,
             IEnumerable<ParameterInfo> parameters)
         {
             var ajaxRequestParams = string.Join(", ", parameters.Select(p => p.Name));
 
-            return codeFile.AppendLine($"return new Promise<{returnType}>((resolve) => resolve($.get('/api/testapi/{endpointName}', {{{ajaxRequestParams}}})));");
+            return codeFile.AppendLine($"return new Promise<{returnType}>((resolve) => resolve($.{jQueryAjaxRequestFunction}('/api/testapi/{endpointName}', {{{ajaxRequestParams}}})));");
         }
     }
 }
