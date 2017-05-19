@@ -10,11 +10,11 @@ var Api;
     Api.NewTestApiService = NewTestApiService;
     class TestApiService {
         constructor() {
-            this.get1 = () => {
-                return new Promise((resolve) => resolve($.get('/api/testapi/get1', {})));
-            };
             this.get2 = (i, s) => {
                 return new Promise((resolve) => resolve($.get('/api/testapi/get2', { i, s })));
+            };
+            this.get1 = () => {
+                return new Promise((resolve) => resolve($.get('/api/testapi/get1', {})));
             };
         }
     }

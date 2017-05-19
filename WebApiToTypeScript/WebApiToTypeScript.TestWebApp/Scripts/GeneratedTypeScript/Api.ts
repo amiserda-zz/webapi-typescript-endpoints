@@ -7,11 +7,11 @@ module Api {
     }
     export class TestApiService {
 
-        get1 = () : Promise<string> => {
-            return new Promise<string>((resolve) => resolve($.get('/api/testapi/get1', {})));
-        }
         get2 = (i: number, s: string) : Promise<number> => {
             return new Promise<number>((resolve) => resolve($.get('/api/testapi/get2', {i, s})));
+        }
+        get1 = () : Promise<string> => {
+            return new Promise<string>((resolve) => resolve($.get('/api/testapi/get1', {})));
         }
     }
 }

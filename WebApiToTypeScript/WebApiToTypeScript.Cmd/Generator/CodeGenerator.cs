@@ -53,8 +53,16 @@ namespace WebApiToTypeScript.Cmd.Generator
 
         private static string MapHttpVerbTojQueryFunction(string httpVerb)
         {
-            if (httpVerb == "GET")
+            if (httpVerb == HttpVerbs.Get)
                 return "get";
+            if (httpVerb == HttpVerbs.Post)
+                return "post";
+            if (httpVerb == HttpVerbs.Put)
+                return "put";
+            if (httpVerb == HttpVerbs.Patch)
+                return "patch";
+            if (httpVerb == HttpVerbs.Delete)
+                return "delete";
             return "get";
         }
 

@@ -47,6 +47,8 @@
     <Compile Include="Generator\CodeGenerator.cs" />
     <Compile Include="Mapper\EndpointsToTypeScriptMapper.cs" />
     <Compile Include="Mapper\FunctionInfo.cs" />
+    <Compile Include="Mapper\HttpVerbDetector.cs" />
+    <Compile Include="Mapper\HttpVerbs.cs" />
     <Compile Include="Mapper\ParameterInfo.cs" />
     <Compile Include="Mapper\ServiceClassInfo.cs" />
     <Compile Include="Mapper\TypeScriptArtefacts.cs" />
