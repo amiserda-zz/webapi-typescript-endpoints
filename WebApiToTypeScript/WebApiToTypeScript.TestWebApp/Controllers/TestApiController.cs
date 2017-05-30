@@ -14,11 +14,5 @@ namespace WebApiToTypeScript.TestWebApp.Controllers
         {
             return "value";
         }
-
-        [HttpGet]
-        public string One()
-        {
-            return "value1";
-        }
     }
 }

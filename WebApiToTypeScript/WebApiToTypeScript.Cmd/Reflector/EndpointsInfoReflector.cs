@@ -63,11 +63,9 @@ namespace WebApiToTypeScript.Cmd.Reflector
             });
         }
 
-        private static IEnumerable<MethodInfo> GetPublicMethods(Type type)
+        private static IEnumerable<MethodInfo> GetPublicMethods(IReflect type)
         {
-            return type
-                .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.DeclaredOnly)
-                .Where(x => x.Name.StartsWith("Get"));
+            return type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.DeclaredOnly);
         }
     }
 }

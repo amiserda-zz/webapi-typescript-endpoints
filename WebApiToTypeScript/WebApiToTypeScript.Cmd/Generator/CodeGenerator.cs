@@ -35,7 +35,7 @@ namespace WebApiToTypeScript.Cmd.Generator
                         .AppendIndentation()
                         .AppendIndentation()
                         .AppendIndentation()
-                        .AppendAjaxRequestWithPromiseResolver(function.Name, function.ReturnType, MapHttpVerbTojQueryFunction(function.HttpVerb), function.Parameters)
+                        .AppendAjaxRequestWithPromiseResolver(function.ReturnType, function.HttpVerb, function.Parameters)
                         .AppendIndentation()
                         .AppendIndentation()
                         .AppendBlockEnd();
@@ -49,21 +49,6 @@ namespace WebApiToTypeScript.Cmd.Generator
                 codeFile
                 .AppendBlockEnd()
                 .ToString();
-        }
-
-        private static string MapHttpVerbTojQueryFunction(string httpVerb)
-        {
-            if (httpVerb == HttpVerbs.Get)
-                return "get";
-            if (httpVerb == HttpVerbs.Post)
-                return "post";
-            if (httpVerb == HttpVerbs.Put)
-                return "put";
-            if (httpVerb == HttpVerbs.Patch)
-                return "patch";
-            if (httpVerb == HttpVerbs.Delete)
-                return "delete";
-            return "get";
         }
 
         private static string RemoveTrailingParametersDelimiter(StringBuilder parametersCode)

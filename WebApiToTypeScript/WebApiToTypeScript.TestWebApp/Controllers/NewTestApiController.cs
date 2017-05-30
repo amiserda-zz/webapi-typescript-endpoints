@@ -9,5 +9,9 @@ namespace WebApiToTypeScript.TestWebApp.Controllers
         {
             return DateTime.Now;
         }
+
+        public void Post(bool a, byte b, char c, decimal d, double e, float f, int g, long h, sbyte i, short j, uint k, ulong l, ushort m)
+        {
+        }
     }
 }

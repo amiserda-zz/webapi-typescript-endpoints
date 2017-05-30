@@ -22,14 +22,24 @@ namespace WebApiToTypeScript.Cmd.Generator
         internal static StringBuilder AppendStartOfClassBlock(this StringBuilder codeFile, string className) => codeFile.AppendLine($"export class {className} {{{Environment.NewLine}");
 
         internal static StringBuilder AppendAjaxRequestWithPromiseResolver(this StringBuilder codeFile, 
-            string endpointName,
             string returnType,
-            string jQueryAjaxRequestFunction,
+            string httpVerb,
             IEnumerable<ParameterInfo> parameters)
         {
             var ajaxRequestParams = string.Join(", ", parameters.Select(p => p.Name));
+            var hasParams = !string.IsNullOrEmpty(ajaxRequestParams);
 
-            return codeFile.AppendLine($"return new Promise<{returnType}>((resolve) => resolve($.{jQueryAjaxRequestFunction}('/api/testapi/{endpointName}', {{{ajaxRequestParams}}})));");
+            var ajaxRequest = "$.ajax({" +
+                             $"method: '{httpVerb}'," +
+                              "url: '/api/testapi/'";
+
+            if (hasParams) ajaxRequest += $",data: {{{ajaxRequestParams}}}";
+
+            ajaxRequest += "})";
+
+            return codeFile
+                .Append($"return new Promise<{returnType}>((resolve) =>")
+                .AppendLine($" resolve({ajaxRequest}));");
         }
     }
 }
